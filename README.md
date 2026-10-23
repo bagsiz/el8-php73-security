@@ -196,6 +196,13 @@ startup and shutdown, multipart parsing and the session extension. Those are fix
 upgrading the `php73-php-*` core packages. PECL extensions are separate code that runs
 inside the patched core.
 
+**`install` fails with "file /etc/opt/remi/php73/php-fpm.d/www.conf ... conflicts with file from package php-fpm-7.2.24".**
+php73's pool directory was linked to the OS php-fpm's (`/etc/opt/remi/php73/php-fpm.d ->
+/etc/php-fpm.d`), usually so that VestaCP manages php73's pools. rpm then sees one file as
+owned by two packages and refuses the upgrade; nothing is changed. Fix the layout with
+[vesta-remi-php-fpm](https://github.com/bagsiz/vesta-remi-php-fpm) (`status`, `apply`;
+Vesta keeps working), then run `install` again.
+
 **The server also has AppStream `php` 7.2 (`/usr/bin/php`). What about it?**
 It is reported but not changed. If nothing uses it (no `php-fpm` service, no cron jobs
 calling `/usr/bin/php`), remove it; otherwise it has to be patched or upgraded separately.
